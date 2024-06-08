@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include "pub.h"
+#include "dirent.h"
 #define PORT 6666
 
 void send_header(int cfd, int code, char *info, char *filetype, int length)
@@ -119,6 +120,36 @@ void read_client_request(int epfd, struct epoll_event *ev)
 			else if(S_ISDIR(s.st_mode))//请求的是一个目录
 			{
 				printf("dir\n");
+				//发送一个列表 网页
+				send_header(ev->data.fd, 200, "OK", get_mime_type("*.html"), 0);
+				//发送header.html
+				send_file(ev->data.fd, "dir_header.html", ev, epfd, 0);
+
+				//得到一个目录下所有的文件名
+				struct dirent **mylist = NULL;
+				char buf[1024] = "";
+				int len = 0;
+				int n = scandir(strfile, &mylist, NULL, alphasort);
+				for(int i = 0; i < n; ++i)
+				{
+					//printf("%s\n", mylist[i]->d_name);
+					if(mylist[i]->d_type == DT_DIR)//如果是目录
+					{
+						len = sprintf(buf, "<li><a href=%s/ >%s</a></li>",
+							mylist[i]->d_name, mylist[i]->d_name);
+					}
+					else
+					{	
+						len = sprintf(buf, "<li><a href=%s >%s</a></li>", 
+							mylist[i]->d_name, mylist[i]->d_name);
+					}		
+
+					send(ev->data.fd, buf, len, 0);
+					free(mylist[i]);
+				}
+				free(mylist);
+				
+				send_file(ev->data.fd, "dir_tail.html", ev, epfd, 1);
 			}
 		}
 	}
@@ -191,3 +222,4 @@ int main()
 
 	return 0;
 }
+
