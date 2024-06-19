@@ -28,3 +28,19 @@ void WebServer::init(int port, string user, string password, string databaseName
 	m_actormodel = actor_model;
 }
 
+void WebServer::log_write()
+{
+	if(0 == m_close_log)
+	{
+		//初始化日志
+		if(1 == m_log_write)
+		{
+			
+		}
+		else
+		{
+			
+		}
+	}
+}
+

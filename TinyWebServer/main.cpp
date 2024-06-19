@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 			config.close_log, config.actor_model);
 
 	//日志
-	//server.log_write;
+	server.log_write();
 
 
 	return 0;
