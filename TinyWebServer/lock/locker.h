@@ -59,6 +59,12 @@ public:
 		ret = pthread_cond_wait(&m_cond, m_mutex);
 		return ret == 0;
 	}
+	bool timewait(pthread_mutex_t *m_mutex, struct timespec t)
+	{
+		int ret = 0;
+		ret = pthread_cond_timedwait(&m_cond, m_mutex, &t);
+		return ret == 0;
+	}
 	bool signal()
 	{
 		return pthread_cond_signal(&m_cond) == 0;
@@ -86,7 +92,7 @@ public:
 	}
 	sem(int num)//信号初始值-资源数
 	{
-		if(sem_init(&m_sem, 0, num) !+ 0)
+		if(sem_init(&m_sem, 0, num) != 0)
 		{
 			throw std::exception();
 		}

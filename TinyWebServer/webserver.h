@@ -12,6 +12,7 @@
 #include <cassert>
 #include <sys/epoll.h>
 #include <string>
+#include "./log/log.h"
 
 using namespace std;
 
