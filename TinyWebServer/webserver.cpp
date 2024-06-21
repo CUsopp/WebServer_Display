@@ -44,3 +44,7 @@ void WebServer::log_write()
 	}
 }
 
+void WebServer::sql_pool()
+{
+
+}

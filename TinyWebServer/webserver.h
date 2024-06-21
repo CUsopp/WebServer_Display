@@ -26,7 +26,7 @@ public:
 			int log_write, int opt_linger, int trigmode, int sql_num,
 			int thread_num, int close_log, int actor_model);
 	void log_write();
-	
+	void sql_pool();	
 
 public:
 	//基础
@@ -37,6 +37,7 @@ public:
 	int m_actormodel;
 	
 	//数据库相关
+	
 	string m_user;		//登录数据库用户名
 	string m_password;	//登录数据库密码
 	string m_databaseName;	//使用数据库名

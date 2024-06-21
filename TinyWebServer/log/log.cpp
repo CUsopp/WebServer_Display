@@ -53,6 +53,18 @@ bool Log::init(const char *file_name, int close_log, int log_buf_size, int split
 	}
 	else
 	{
+		/*strcpy(log_name, p + 1);
+                if(p != file_name)
+                {
+                        strncpy(dir_name, file_name, p - file_name);
+                        dir_name[p - file_name] = '\0';
+                }else{
+                dir_name[0] = '\0';
+                }
+                //strncpy(dir_name, file_name, p - file_name + 1);
+                int maxLength = (int)sizeof(log_full_name) - 1 - ((int)strlen(dir_name) + 1 + 5 + 2 + 2 + 1 + (int)strlen(log_name));
+                if(maxLength < 0){return false;}
+                snprintf(log_full_name, sizeof(log_full_name) - 1, "%.*s%d_%02d_%02d_%.*s",(int)(sizeof(dir_name)-1), dir_name, my_tm.tm_year + 1900, my_tm.tm_mon + 1, my_tm.tm_mday, (int)(sizeof(log_name) - 1), log_name);*/
 		strcpy(log_name, p + 1);
 		strncpy(dir_name, file_name, p - file_name + 1);
 		snprintf(log_full_name, 255, "%s%d_%02d_%02d_%s", dir_name, my_tm.tm_year + 1900, my_tm.tm_mon + 1, my_tm.tm_mday, log_name);

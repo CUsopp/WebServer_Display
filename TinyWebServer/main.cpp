@@ -3,9 +3,10 @@
 int main(int argc, char *argv[])
 {
 	//需要修改的数据库信息，登录名，密码，库名
-	string user = "root";
-	string passwd = "root";
-	string databaseName = "qgydb";
+	//CREATE USER 'tourist'@'%' IDENTIFIED BY 'tour666';
+	string user = "tourist";
+	string passwd = "tour666";
+	string databaseName = "forya";
 
 	//命令行解析
 	Config config;
@@ -21,6 +22,8 @@ int main(int argc, char *argv[])
 	//日志
 	server.log_write();
 
+	//数据库
+	server.sql_pool();
 
 	return 0;
 }
