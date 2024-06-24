@@ -13,6 +13,7 @@
 #include <sys/epoll.h>
 #include <string>
 #include "./log/log.h"
+#include "./CGImysql/sql_connection_pool.h"
 
 using namespace std;
 
@@ -37,7 +38,7 @@ public:
 	int m_actormodel;
 	
 	//数据库相关
-	
+	connection_pool *m_connPool;	
 	string m_user;		//登录数据库用户名
 	string m_password;	//登录数据库密码
 	string m_databaseName;	//使用数据库名
