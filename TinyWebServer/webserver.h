@@ -14,6 +14,7 @@
 #include <string>
 #include "./log/log.h"
 #include "./CGImysql/sql_connection_pool.h"
+#include "./http/http_conn.h"
 
 using namespace std;
 
@@ -43,6 +44,9 @@ public:
 	string m_password;	//登录数据库密码
 	string m_databaseName;	//使用数据库名
 	int m_sql_num;
+
+	//http相关
+	http_conn *users_http;
 
 	//线程池相关
 	int m_thread_num;

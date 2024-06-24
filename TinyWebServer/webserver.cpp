@@ -50,6 +50,6 @@ void WebServer::sql_pool()
 	m_connPool = connection_pool::GetInstance();
 	m_connPool->init("localhost", m_user, m_password, m_databaseName, 3306, m_sql_num, m_close_log);
 
-	//初始化数据库读取表
-	
+	//初始化数据库读取表 将数据存储至http对象
+	users_http->initmysql_result(m_connPool);
 }
