@@ -18,6 +18,8 @@
 
 using namespace std;
 
+const int MAX_FD = 65535;	//最大文件描述符
+
 class WebServer
 {
 public:
@@ -28,7 +30,8 @@ public:
 			int log_write, int opt_linger, int trigmode, int sql_num,
 			int thread_num, int close_log, int actor_model);
 	void log_write();
-	void sql_pool();	
+	void sql_pool();
+	void thread_pool();	
 
 public:
 	//基础

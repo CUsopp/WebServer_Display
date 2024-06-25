@@ -2,12 +2,13 @@
 
 WebServer::WebServer()
 {
-
+	//http_conn类对象
+	users_http = new http_conn[MAX_FD];
 }
 
 WebServer::~WebServer()
 {
-
+	delete[] users_http;
 }
 
 
@@ -52,4 +53,10 @@ void WebServer::sql_pool()
 
 	//初始化数据库读取表 将数据存储至http对象
 	users_http->initmysql_result(m_connPool);
+}
+
+void WebServer::thread_pool()
+{
+	//线程池
+	//m_pool = new thread<http_conn>(m_)
 }
