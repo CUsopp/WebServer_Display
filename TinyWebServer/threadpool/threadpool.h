@@ -61,7 +61,7 @@ bool threadpool<T>::append_p(T *request)
 }
 
 template<typename T>
-threadpool<T>::threadpool(int actor_model, connection_pool *connPool, int thread_number, int max_request) 
+threadpool<T>::threadpool(int actor_model, connection_pool *connPool, int thread_number, int max_requests) 
 			: m_actor_model(actor_model), m_thread_number(thread_number), m_max_requests(max_requests),
 			m_threads(NULL), m_connPool(connPool)
 {
@@ -116,6 +116,40 @@ void threadpool<T>::run()
 		m_queuelocker.unlock();
 		if(!request)
 			continue;
+		if (1 == m_actor_model)
+		{
+			if (0 == request->m_state)
+			{
+				if (request->read_once())
+				{
+					request->improv = 1;
+					connectionRAII mysqlcon(&request->mysql, m_connPool);
+					request->process();
+				}
+				else
+				{
+					request->improv = 1;
+					request->timer_flag = 1;
+				}
+			}
+			else
+			{
+				if (request->write())
+				{
+					request->improv = 1;
+				}
+				else
+				{
+					request->improv = 1;
+					request->timer_flag = 1;
+				}
+			}
+		}
+		else
+		{
+			connectionRAII mysqlcon(&request->mysql, m_connPool);
+			request->process();
+		}
 	}
 }
 

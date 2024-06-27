@@ -15,6 +15,7 @@
 #include "./log/log.h"
 #include "./CGImysql/sql_connection_pool.h"
 #include "./http/http_conn.h"
+#include "./threadpool/threadpool.h"
 
 using namespace std;
 
@@ -52,6 +53,7 @@ public:
 	http_conn *users_http;
 
 	//线程池相关
+	threadpool<http_conn> *m_pool;
 	int m_thread_num;
 
 	int m_OPT_LINGER;

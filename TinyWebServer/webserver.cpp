@@ -58,5 +58,5 @@ void WebServer::sql_pool()
 void WebServer::thread_pool()
 {
 	//线程池
-	//m_pool = new thread<http_conn>(m_)
+	m_pool = new threadpool<http_conn>(m_actormodel, m_connPool, m_thread_num);
 }

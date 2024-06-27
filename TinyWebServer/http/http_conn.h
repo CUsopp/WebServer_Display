@@ -4,6 +4,13 @@
 #include "../CGImysql/sql_connection_pool.h"
 #include <map>
 #include <sys/socket.h>
+#include <sys/epoll.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/uio.h>
 
 class http_conn
 {
@@ -63,8 +70,32 @@ public:
 	int timer_flag;
 	int improv;
 
+	HTTP_CODE process_read();
+	LINE_STATUS parse_line();
+	char *get_line() { return m_read_buf + m_start_line; };
+	HTTP_CODE parse_request_line(char *text);
+	HTTP_CODE parse_headers(char *text);
+	HTTP_CODE parse_content(char *text);
+	HTTP_CODE do_request();
+	bool add_response(const char *format, ...);
+	bool add_status_line(int status, const char *title);
+	bool add_headers(int content_length);
+	bool add_content_length(int content_length);
+	bool add_linger();
+	bool add_blank_line();
+	bool add_content(const char *content);
+	bool process_write(HTTP_CODE ret);
+	void close_conn(bool real_close = true);
+
 private:
 	void init();
+	void unmap();	//取消内存映射
+
+public:
+	static int m_epollfd;
+	static int m_user_count;
+	MYSQL *mysql;
+	int m_state;//读为0，写为1
 
 private:
 	map<string, string> m_users;
@@ -75,7 +106,29 @@ private:
 	int m_sockfd;
 	char m_read_buf[READ_BUFFER_SIZE];
 	long m_read_idx;
-	
+	long m_checked_idx;
+	int m_start_line;
+	char m_write_buf[WRITE_BUFFER_SIZE];
+	int m_write_idx;
+	int bytes_to_send;
+	int bytes_have_send;
+	CHECK_STATE m_check_state;
+	METHOD m_method;
+	char m_real_file[FILENAME_LEN];
+	char *m_url;
+	char *m_version;
+	char *m_host;
+	long m_content_length;
+	bool m_linger;
+	int cgi;	//是否启用的POST
+	char *m_string;	//存储请求头数据
+	char *m_file_address;
+	struct stat m_file_stat;
+	struct iovec m_iv[2];
+	int m_iv_count;
+	char *doc_root;
+	locker m_lock;
+	map<string, string> users;
 };
 
 
