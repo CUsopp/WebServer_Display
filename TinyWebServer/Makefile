@@ -1,4 +1,4 @@
-OBJS = main.o webserver.o config.o ./log/log.o ./CGImysql/sql_connection_pool.o ./http/http_conn.o
+OBJS = main.o webserver.o config.o ./log/log.o ./CGImysql/sql_connection_pool.o ./http/http_conn.o ./timer/lst_timer.o
 TARGET = server
 
 $(TARGET) : $(OBJS)

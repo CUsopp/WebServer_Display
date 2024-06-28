@@ -12,14 +12,18 @@
 #include <cassert>
 #include <sys/epoll.h>
 #include <string>
+#include <signal.h>
 #include "./log/log.h"
 #include "./CGImysql/sql_connection_pool.h"
 #include "./http/http_conn.h"
 #include "./threadpool/threadpool.h"
+#include "./timer/lst_timer.h"
 
 using namespace std;
 
-const int MAX_FD = 65535;	//最大文件描述符
+const int MAX_FD = 65535;		//最大文件描述符
+const int TIMESLOT = 5;             	//最小超时单位
+const int MAX_EVENT_NUMBER = 10000; 	//最大事件数
 
 class WebServer
 {
@@ -33,6 +37,8 @@ public:
 	void log_write();
 	void sql_pool();
 	void thread_pool();	
+	void trig_mode();
+	void eventListen();
 
 public:
 	//基础
@@ -58,7 +64,17 @@ public:
 
 	int m_OPT_LINGER;
 	int m_TRIGMode;
+	int m_LISTENTrigmode;
+	int m_CONNTrigmode;
 
+	//监听
+	int m_listenfd;
+	
+	//定时器相关
+	client_data *users_timer;
+	Utils utils;
+	int m_pipefd[2];
+	int m_epollfd;
 };
 
 
